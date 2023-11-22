@@ -66,6 +66,8 @@ const CheckOutForm = () => {
     if (paymentIntent.status === "succeeded") {
       const payment = {
         price,
+        name: "user",
+        email: "user@gmail.com",
         transactionId: paymentIntent.id,
       };
 
