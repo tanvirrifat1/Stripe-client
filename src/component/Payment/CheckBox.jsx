@@ -1,8 +1,10 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useQuery } from "@tanstack/react-query";
 
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+
 import Swal from "sweetalert2";
+import PaymentHistory from "../PaymentHistory/PaymentHistory";
 
 const CheckOutForm = () => {
   const stripe = useStripe();
@@ -12,9 +14,17 @@ const CheckOutForm = () => {
   const [clientSecret, setClientSecret] = useState("");
   const [price, setPrice] = useState("12");
 
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: [],
+    queryFn: async () => {
+      const res = await fetch("http://localhost:5000/payment");
+      return res.json();
+    },
+  });
+
   useEffect(() => {
     if (value === "rifat01") {
-      const discount = (parseFloat(price) * 50) / 100;
+      const discount = (parseFloat(price) * 25) / 100;
       const discountPrice = parseFloat(price) - discount;
       setPrice((prevPrice) => discountPrice.toString());
     }
@@ -81,6 +91,7 @@ const CheckOutForm = () => {
         .then((res) => res.json())
         .then((data) => {
           if (data.insertedId) {
+            refetch();
             Swal.fire("Payment Successfully!");
             setTransactionId(paymentIntent.id);
           }
@@ -91,11 +102,11 @@ const CheckOutForm = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <h1 className="my-2">Price: 12$</h1>
+        <h1 className="my-2 text-2xl">Price: 12$</h1>
         <h1 className="my-2">
           if you use{" "}
-          <span className="text-purple-600 font-semibold">rifat01</span> cupon
-          code you will get 50% discount
+          <span className="text-purple-600 font-semibold text-xl">rifat01</span>{" "}
+          coupon code you will get 25% discount
         </h1>
         <input
           type="text"
@@ -131,6 +142,7 @@ const CheckOutForm = () => {
         </button>
       </form>
       <p className="text-red-500">{cardError}</p>
+      <PaymentHistory data={data} />
     </div>
   );
 };

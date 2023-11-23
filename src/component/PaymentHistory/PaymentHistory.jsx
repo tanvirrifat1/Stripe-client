@@ -1,29 +1,17 @@
+/* eslint-disable react/prop-types */
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-const PaymentHistory = () => {
-  const [payment, setPayment] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:5000/payment", {
-      method: "GET", // Use "GET" for a GET request
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // No need to include a body for a GET request
-    })
-      .then((res) => res.json())
-      .then((data) => setPayment(data));
-  }, []);
-  console.log(payment);
+const PaymentHistory = ({ data }) => {
   return (
     <div className="pr-20 pl-5 py-10">
       <div className="overflow-x-auto ">
         <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-          <thead className="text-left ">
+          <thead className="">
             <tr>
-              <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900"></th>
+              <th className="whitespace-nowrap mr-60 px-4 py-2 font-medium text-gray-900"></th>
 
-              <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+              <th className="whitespace-nowrap px-4 py-2  font-medium text-gray-900">
                 Name
               </th>
 
@@ -40,8 +28,8 @@ const PaymentHistory = () => {
           </thead>
 
           <tbody className="divide-y divide-gray-200">
-            {payment?.length > 0 &&
-              payment?.map((user, index) => (
+            {data?.length > 0 &&
+              data?.map((user, index) => (
                 <tr key={user?.id}>
                   <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                     {index + 1}
