@@ -1,6 +1,4 @@
 /* eslint-disable react/prop-types */
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 
 const PaymentHistory = ({ data }) => {
   return (
@@ -19,7 +17,7 @@ const PaymentHistory = ({ data }) => {
                 Email
               </th>
               <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                Total Payment
+                Price
               </th>
               <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                 Status

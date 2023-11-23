@@ -15,9 +15,9 @@ const CheckOutForm = () => {
   const [price, setPrice] = useState("12");
 
   const { data, refetch, isLoading } = useQuery({
-    queryKey: [],
+    queryKey: ["data"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:5000/payment");
+      const res = await fetch("https://payment-stripe-one.vercel.app/payment");
       return res.json();
     },
   });
@@ -29,7 +29,7 @@ const CheckOutForm = () => {
       setPrice((prevPrice) => discountPrice.toString());
     }
 
-    fetch("http://localhost:5000/create-payment-intent", {
+    fetch("https://payment-stripe-one.vercel.app/create-payment-intent", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,12 +68,7 @@ const CheckOutForm = () => {
         },
       });
 
-    if (confirmError) {
-      setCardError(confirmError.message);
-      return;
-    }
-
-    if (paymentIntent.status === "succeeded") {
+    if (paymentIntent) {
       const payment = {
         price,
         name: "user",
@@ -81,7 +76,7 @@ const CheckOutForm = () => {
         transactionId: paymentIntent.id,
       };
 
-      fetch("http://localhost:5000/payments", {
+      fetch("https://payment-stripe-one.vercel.app/payments", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -97,7 +92,16 @@ const CheckOutForm = () => {
           }
         });
     }
+
+    if (confirmError) {
+      setCardError(confirmError.message);
+      return;
+    }
   };
+
+  if (isLoading) {
+    return <p>Loading....</p>;
+  }
 
   return (
     <div>
